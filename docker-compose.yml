@@ -1,0 +1,59 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGPORT: 5432
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    networks:
+      - menetlus
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  adminer:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-dev@nqa.io}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-Sw0rdf!sh}
+    ports:
+      - ${PGADM_PORT:-5050}:80
+    networks:
+      - menetlus
+    depends_on:
+      - postgres
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    restart: always
+    ports:
+      - ${BACKEND_PORT:-8080}:8080
+    networks:
+      - menetlus
+    depends_on:
+      - postgres
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - ${FRONTEND_PORT:-3000}:3000
+    networks:
+      - menetlus
+    depends_on:
+      - backend
+
+networks:
+  menetlus:
+    driver: bridge
+
+volumes:
+  pgdata:

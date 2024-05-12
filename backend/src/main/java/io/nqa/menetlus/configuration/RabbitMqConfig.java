@@ -1,12 +1,12 @@
 package io.nqa.menetlus.configuration;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Data
 @Configuration
+@RequiredArgsConstructor
 public class RabbitMqConfig {
     private final ApplicationProperties.RabbitMq properties;
 

@@ -12,4 +12,6 @@ public interface IMenetlusService {
     MenetlusDTO getDtoById(final long id);
     Menetlus save(final Menetlus menetlus);
     MenetlusDTO save(final MenetlusDTO menetlus);
+    void sendEmail(final String email);
+    boolean validateInfo(Menetlus menetlus);
 }

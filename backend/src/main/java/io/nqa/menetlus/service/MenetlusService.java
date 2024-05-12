@@ -3,6 +3,7 @@ package io.nqa.menetlus.service;
 import io.nqa.menetlus.entity.Menetlus;
 import io.nqa.menetlus.model.MenetlusDTO;
 import io.nqa.menetlus.repository.MenetlusRepository;
+import io.nqa.menetlus.util.MenetlusUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MenetlusService implements IMenetlusService {
+    private final IRabbitMqService rabbitMqService;
     private final MenetlusRepository repository;
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -57,5 +59,15 @@ public class MenetlusService implements IMenetlusService {
                         menetlus,
                         Menetlus.class)),
                 MenetlusDTO.class);
+    }
+
+    @Override
+    public void sendEmail(String email) {
+        this.rabbitMqService.sendViaDirectExchange(email);
+    }
+
+    @Override
+    public boolean validateInfo(Menetlus menetlus) {
+        return !MenetlusUtils.isEmailValid(menetlus.getEmail()) || !MenetlusUtils.isIsikukoodValid(menetlus.getIsikukood());
     }
 }

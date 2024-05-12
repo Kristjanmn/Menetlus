@@ -1,0 +1,11 @@
+application:
+  rabbitMq:
+    durable: true
+    queueName: ""
+    topicExchangeName: ""
+    headerExchangeName: ""
+    directExchangeName: ""
+    fanoutExchangeName: ""
+    headerArgument: ""
+    routingKey: ""
+    directRoutingKey: "direct"

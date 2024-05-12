@@ -1,9 +1,11 @@
 package io.nqa.menetlus.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "menetlus")
+@Data
 public class Menetlus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

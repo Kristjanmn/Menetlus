@@ -1,0 +1,26 @@
+application:
+  rabbitMq:
+    durable: true
+    queueName: "menetlus-rabbitmq"
+    topicExchangeName: "menetlus-topic-exchange"
+    headerExchangeName: "menetlus-headers-exchange"
+    directExchangeName: "menetlus-direct-exchange"
+    fanoutExchangeName: "menetlus-fanout-exchange"
+    headerArgument: "testId"
+    routingKey: "menetlus.#"
+    headerRoutingKey: "header.#"
+    directRoutingKey: "direct"
+    fanoutRoutingKey: " "
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:db
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update

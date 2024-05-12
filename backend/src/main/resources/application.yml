@@ -13,5 +13,17 @@ application:
     fanoutRoutingKey: " "
 
 spring:
+  application:
+    name: Menetlus
+  datasource:
+    url: jdbc:postgresql://postgres/menetlus
+    driver-class-name: org.postgresql.Driver
+    username: menetlus
+    password: parool
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
   rabbitmq:
-    host: "rabbitmq"
+    host: rabbitmq

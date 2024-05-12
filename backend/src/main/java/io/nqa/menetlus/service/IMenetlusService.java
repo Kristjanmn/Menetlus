@@ -10,5 +10,6 @@ public interface IMenetlusService {
     List<MenetlusDTO> getAllDtos();
     Menetlus getById(final long id);
     MenetlusDTO getDtoById(final long id);
-    void save(final Menetlus menetlus);
+    Menetlus save(final Menetlus menetlus);
+    MenetlusDTO save(final MenetlusDTO menetlus);
 }

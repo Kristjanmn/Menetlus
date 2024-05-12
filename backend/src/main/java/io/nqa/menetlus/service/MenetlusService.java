@@ -46,7 +46,16 @@ public class MenetlusService implements IMenetlusService {
     }
 
     @Override
-    public void save(Menetlus menetlus) {
-        this.repository.save(menetlus);
+    public Menetlus save(Menetlus menetlus) {
+        return this.repository.save(menetlus);
+    }
+
+    @Override
+    public MenetlusDTO save(MenetlusDTO menetlus) {
+        return modelMapper.map(
+                this.save(modelMapper.map(
+                        menetlus,
+                        Menetlus.class)),
+                MenetlusDTO.class);
     }
 }

@@ -8,46 +8,46 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class RabbitMqConfig {
-    private final ApplicationProperties.RabbitMq properties;
+    private final ApplicationProperties properties;
 
     @Bean
     Queue queue() {
-        return new Queue(properties.getQueueName(), properties.isDurable());
+        return new Queue(properties.getRabbitMq().getQueueName(), properties.getRabbitMq().isDurable());
     }
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange(properties.getTopicExchangeName());
+        return new TopicExchange(properties.getRabbitMq().getTopicExchangeName());
     }
 
     @Bean
     HeadersExchange headers() {
-        return new HeadersExchange(properties.getHeaderExchangeName());
+        return new HeadersExchange(properties.getRabbitMq().getHeaderExchangeName());
     }
 
     @Bean
     DirectExchange directExchange() {
-        return new DirectExchange(properties.getDirectExchangeName());
+        return new DirectExchange(properties.getRabbitMq().getDirectExchangeName());
     }
 
     @Bean
     FanoutExchange fanoutExchange() {
-        return new FanoutExchange(properties.getFanoutExchangeName());
+        return new FanoutExchange(properties.getRabbitMq().getFanoutExchangeName());
     }
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(properties.getRoutingKey());
+        return BindingBuilder.bind(queue).to(exchange).with(properties.getRabbitMq().getRoutingKey());
     }
 
     @Bean
     Binding bindingHeader(Queue queue, HeadersExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).where(properties.getHeaderArgument()).exists();
+        return BindingBuilder.bind(queue).to(exchange).where(properties.getRabbitMq().getHeaderArgument()).exists();
     }
 
     @Bean
     Binding directExchangeBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(properties.getDirectRoutingKey());
+        return BindingBuilder.bind(queue).to(exchange).with(properties.getRabbitMq().getDirectRoutingKey());
     }
 
     @Bean

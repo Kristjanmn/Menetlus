@@ -10,28 +10,28 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RabbitMqService implements IRabbitMqService {
-    private final ApplicationProperties.RabbitMq properties;
+    private final ApplicationProperties properties;
     private final AmqpTemplate template;
 
     @Override
     public void sendViaTopicExchange(String message) {
-        template.convertAndSend(properties.getTopicExchangeName(), "menetlus.test", message);
+        template.convertAndSend(properties.getRabbitMq().getTopicExchangeName(), "menetlus.test", message);
     }
 
     @Override
     public void sendViaHeadersExchange(String message) {
         Message sysErrMsg = MessageBuilder.withBody(message.getBytes()).setHeader("testId", "123")
                 .setHeader("anotherId", "another123").build();
-        template.convertAndSend(properties.getHeaderExchangeName(), properties.getHeaderRoutingKey(), sysErrMsg);
+        template.convertAndSend(properties.getRabbitMq().getHeaderExchangeName(), properties.getRabbitMq().getHeaderRoutingKey(), sysErrMsg);
     }
 
     @Override
     public void sendViaDirectExchange(String message) {
-        template.convertAndSend(properties.getDirectExchangeName(), properties.getDirectRoutingKey(), message);
+        template.convertAndSend(properties.getRabbitMq().getDirectExchangeName(), properties.getRabbitMq().getDirectRoutingKey(), message);
     }
 
     @Override
     public void sendViaFanoutExchange(String message) {
-        template.convertAndSend(properties.getFanoutExchangeName(), properties.getFanoutRoutingKey(), message);
+        template.convertAndSend(properties.getRabbitMq().getFanoutExchangeName(), properties.getRabbitMq().getFanoutRoutingKey(), message);
     }
 }

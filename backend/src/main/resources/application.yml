@@ -11,3 +11,7 @@ application:
     headerRoutingKey: "header.#"
     directRoutingKey: "direct"
     fanoutRoutingKey: " "
+
+spring:
+  rabbitmq:
+    host: "rabbitmq"

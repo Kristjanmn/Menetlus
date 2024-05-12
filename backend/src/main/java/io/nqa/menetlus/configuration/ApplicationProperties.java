@@ -20,6 +20,8 @@ public class ApplicationProperties {
         private String fanoutExchangeName;
         private String headerArgument;
         private String routingKey;
+        private String headerRoutingKey;
         private String directRoutingKey;
+        private String fanoutRoutingKey;
     }
 }

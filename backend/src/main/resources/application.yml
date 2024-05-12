@@ -1,11 +1,13 @@
 application:
   rabbitMq:
     durable: true
-    queueName: ""
-    topicExchangeName: ""
-    headerExchangeName: ""
-    directExchangeName: ""
-    fanoutExchangeName: ""
-    headerArgument: ""
-    routingKey: ""
+    queueName: "menetlus-rabbitmq"
+    topicExchangeName: "menetlus-topic-exchange"
+    headerExchangeName: "menetlus-headers-exchange"
+    directExchangeName: "menetlus-direct-exchange"
+    fanoutExchangeName: "menetlus-fanout-exchange"
+    headerArgument: "testId"
+    routingKey: "menetlus.#"
+    headerRoutingKey: "header.#"
     directRoutingKey: "direct"
+    fanoutRoutingKey: " "

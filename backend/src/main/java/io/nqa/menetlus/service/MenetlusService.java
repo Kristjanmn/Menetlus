@@ -49,6 +49,10 @@ public class MenetlusService implements IMenetlusService {
 
     @Override
     public Menetlus save(Menetlus menetlus) {
+        if (!this.validateInfo(menetlus))
+            return null;
+        if (!menetlus.isEmailDelivered())
+            this.sendEmail(menetlus.getEmail());
         return this.repository.save(menetlus);
     }
 

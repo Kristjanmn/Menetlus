@@ -13,8 +13,8 @@ public class Menetlus {
     private long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private long isikukood;
+    @Column(nullable = false, length = 11)
+    private long personalCode;
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)

@@ -6,7 +6,7 @@ import lombok.Data;
 public class MenetlusDTO {
     private long id;
     private String name;
-    private long isikukood;
+    private long personalCode;
     private String email;
     private boolean emailDelivered;
     private String reason;

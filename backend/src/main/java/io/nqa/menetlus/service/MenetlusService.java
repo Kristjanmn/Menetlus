@@ -68,6 +68,6 @@ public class MenetlusService implements IMenetlusService {
 
     @Override
     public boolean validateInfo(Menetlus menetlus) {
-        return !MenetlusUtils.isEmailValid(menetlus.getEmail()) || !MenetlusUtils.isIsikukoodValid(menetlus.getIsikukood());
+        return !MenetlusUtils.isEmailValid(menetlus.getEmail()) || !MenetlusUtils.isPersonalCodeValid(menetlus.getPersonalCode());
     }
 }

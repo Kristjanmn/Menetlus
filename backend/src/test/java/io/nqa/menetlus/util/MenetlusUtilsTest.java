@@ -20,26 +20,26 @@ public class MenetlusUtilsTest {
     }
 
     @Test
-    void isIsikukoodValid_true() {
-        long isikukood = 34501234215L;
-        assertTrue(MenetlusUtils.isIsikukoodValid(isikukood));
+    void isPersonalCodeValid_true() {
+        long personalCode = 34501234215L;
+        assertTrue(MenetlusUtils.isPersonalCodeValid(personalCode));
     }
 
     @Test
-    void isIsikukoodValid_false() {
-        long isikukood = 20502236235L;
-        assertFalse(MenetlusUtils.isIsikukoodValid(isikukood));
+    void isPersonalCodeValid_false() {
+        long personalCode = 20502236235L;
+        assertFalse(MenetlusUtils.isPersonalCodeValid(personalCode));
     }
 
     @Test
-    void isIsikukoodValid_false_short() {
-        long isikukood = 356272376L;
-        assertFalse(MenetlusUtils.isIsikukoodValid(isikukood));
+    void isPersonalCodeValid_false_short() {
+        long personalCode = 356272376L;
+        assertFalse(MenetlusUtils.isPersonalCodeValid(personalCode));
     }
 
     @Test
-    void isIsikukoodValid_false_long() {
-        long isikukood = 3437347347384L;
-        assertFalse(MenetlusUtils.isIsikukoodValid(isikukood));
+    void isPersonalCodeValid_false_long() {
+        long personalCode = 3437347347384L;
+        assertFalse(MenetlusUtils.isPersonalCodeValid(personalCode));
     }
 }

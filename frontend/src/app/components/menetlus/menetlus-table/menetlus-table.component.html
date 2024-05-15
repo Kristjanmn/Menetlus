@@ -1,0 +1,26 @@
+<ng-container>
+  <h1>Menetlused</h1><br />
+  <table class="table table-striped align-middle mb-0 bg-white">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Isiku nimi</th>
+        <th scope="col">Isikukood</th>
+        <th scope="col">E-kirja aadress</th>
+        <th scope="col">E-kiri saadetud</th>
+        <th scope="col">Menetluse põhjus</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="menetlusList">
+      <tr *ngFor="let menetlus of menetlusList">
+        <td>{{menetlus.id}}</td>
+        <td>{{menetlus.name}}</td>
+        <td>{{menetlus.personalCode}}</td>
+        <td>{{menetlus.email}}</td>
+        <td *ngIf="menetlus.emailDelivered===true" style="color: green">Jah</td>
+        <td *ngIf="menetlus.emailDelivered===false" style="color: red">Ei</td>
+        <td>{{menetlus.reason}}</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>

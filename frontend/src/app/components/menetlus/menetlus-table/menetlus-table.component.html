@@ -1,5 +1,6 @@
-<ng-container>
-  <h1>Menetlused</h1><br />
+<div class="content-body">
+  <h1>Menetlused</h1>
+  <button type="button" class="btn btn-primary new-menetlus-btn" (click)="goToNewMenetlus()">Uus menetlus</button>
   <table class="table table-striped align-middle mb-0 bg-white">
     <thead class="table-dark">
       <tr>
@@ -17,10 +18,10 @@
         <td>{{menetlus.name}}</td>
         <td>{{menetlus.personalCode}}</td>
         <td>{{menetlus.email}}</td>
-        <td *ngIf="menetlus.emailDelivered===true" style="color: green">Jah</td>
-        <td *ngIf="menetlus.emailDelivered===false" style="color: red">Ei</td>
+        <td *ngIf="menetlus.emailDelivered === true" style="color: green">Jah</td>
+        <td *ngIf="menetlus.emailDelivered === false" style="color: red">Ei</td>
         <td>{{menetlus.reason}}</td>
       </tr>
     </tbody>
   </table>
-</ng-container>
+</div>

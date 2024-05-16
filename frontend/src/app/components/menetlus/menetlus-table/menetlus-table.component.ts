@@ -22,7 +22,11 @@ export class MenetlusTableComponent implements OnInit {
   getData(): void {
     this.service.getAll()
       .subscribe(response => {
-        this.menetlusList = response;
+        this.menetlusList = <Menetlus[]>response.data;
       });
+  }
+
+  goToNewMenetlus() {
+    this.router.navigate(['new']);
   }
 }

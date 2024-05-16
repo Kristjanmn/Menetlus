@@ -1,8 +1,11 @@
 package io.nqa.menetlus.model;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MenetlusDTO {
     private long id;
     private String name;

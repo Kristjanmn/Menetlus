@@ -1,6 +1,7 @@
 package io.nqa.menetlus.service;
 
 import io.nqa.menetlus.entity.Menetlus;
+import io.nqa.menetlus.model.CustomResponse;
 import io.nqa.menetlus.model.MenetlusDTO;
 import io.nqa.menetlus.repository.MenetlusRepository;
 import io.nqa.menetlus.util.MenetlusUtils;
@@ -25,13 +26,13 @@ public class MenetlusService implements IMenetlusService {
     }
 
     @Override
-    public List<MenetlusDTO> getAllDtos() {
+    public CustomResponse getAllDto() {
         List<Menetlus> menetlusList = this.getAll();
         List<MenetlusDTO> dtoList = new ArrayList<>();
         for (Menetlus menetlus : menetlusList) {
             dtoList.add(modelMapper.map(menetlus, MenetlusDTO.class));
         }
-        return dtoList;
+        return new CustomResponse(true, dtoList);
     }
 
     @Override
@@ -41,10 +42,11 @@ public class MenetlusService implements IMenetlusService {
     }
 
     @Override
-    public MenetlusDTO getDtoById(long id) {
+    public CustomResponse getByIdDto(long id) {
         Menetlus menetlus = this.getById(id);
-        if (menetlus == null) return null;
-        return modelMapper.map(menetlus, MenetlusDTO.class);
+        if (menetlus == null)
+            return new CustomResponse(false, null);
+        return new CustomResponse(true, modelMapper.map(menetlus, MenetlusDTO.class));
     }
 
     @Override
@@ -57,12 +59,12 @@ public class MenetlusService implements IMenetlusService {
     }
 
     @Override
-    public MenetlusDTO save(MenetlusDTO menetlus) {
-        return modelMapper.map(
-                this.save(modelMapper.map(
-                        menetlus,
-                        Menetlus.class)),
-                MenetlusDTO.class);
+    public CustomResponse save(MenetlusDTO dto) {
+        Menetlus menetlus = modelMapper.map(dto, Menetlus.class);
+        menetlus = this.save(menetlus);
+        if (menetlus == null)
+            return new CustomResponse(false, null);
+        return new CustomResponse(true, modelMapper.map(menetlus, MenetlusDTO.class));
     }
 
     @Override
@@ -72,6 +74,16 @@ public class MenetlusService implements IMenetlusService {
 
     @Override
     public boolean validateInfo(Menetlus menetlus) {
-        return !MenetlusUtils.isEmailValid(menetlus.getEmail()) || !MenetlusUtils.isPersonalCodeValid(menetlus.getPersonalCode());
+        return MenetlusUtils.isEmailValid(menetlus.getEmail()) && MenetlusUtils.isPersonalCodeValid(menetlus.getPersonalCode());
+    }
+
+    @Override
+    public Menetlus setEmailDelivered(long id, boolean value) {
+        Optional<Menetlus> optMenetlus = this.repository.findById(id);
+        if (optMenetlus.isPresent()) {
+            Menetlus menetlus = optMenetlus.get();
+            menetlus.setEmailDelivered(value);
+            return this.save(menetlus);
+        } return null;
     }
 }

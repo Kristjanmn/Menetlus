@@ -21,7 +21,7 @@ export class NewMenetlusComponent {
       this.service.saveMenetlus(this.menetlus)
         .subscribe(response => {
           if (response.success) this.goBack();
-        }).unsubscribe();
+        });
     }
   }
 

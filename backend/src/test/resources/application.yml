@@ -1,16 +1,9 @@
 application:
   rabbitMq:
     durable: true
-    queueName: "menetlus-rabbitmq"
-    topicExchangeName: "menetlus-topic-exchange"
-    headerExchangeName: "menetlus-headers-exchange"
-    directExchangeName: "menetlus-direct-exchange"
-    fanoutExchangeName: "menetlus-fanout-exchange"
-    headerArgument: "testId"
-    routingKey: "menetlus.#"
-    headerRoutingKey: "header.#"
-    directRoutingKey: "direct"
-    fanoutRoutingKey: " "
+    queueName: menetlus.mail
+    exchangeName: menetlus-mail-exchange
+    routingKey: menetlus.mail.request
 
 spring:
   datasource:

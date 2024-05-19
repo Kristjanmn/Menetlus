@@ -1,9 +1,11 @@
 export class CustomResponse {
   success: boolean;
-  data: any;
+  data?: any;
+  message?: string;
 
-  constructor(success: boolean, data: any) {
+  constructor(success: boolean, data?: any, message?: string) {
     this.success = success;
     this.data = data;
+    this.message = message;
   }
 }

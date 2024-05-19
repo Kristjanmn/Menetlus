@@ -14,14 +14,7 @@ public class ApplicationProperties {
     public static class RabbitMq {
         private boolean durable;
         private String queueName;
-        private String topicExchangeName;
-        private String headerExchangeName;
-        private String directExchangeName;
-        private String fanoutExchangeName;
-        private String headerArgument;
+        private String exchangeName;
         private String routingKey;
-        private String headerRoutingKey;
-        private String directRoutingKey;
-        private String fanoutRoutingKey;
     }
 }

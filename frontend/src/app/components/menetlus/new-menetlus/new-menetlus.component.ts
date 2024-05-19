@@ -21,7 +21,7 @@ export class NewMenetlusComponent {
       this.service.saveMenetlus(this.menetlus)
         .subscribe(response => {
           if (response.success) this.goBack();
-          else window.alert("Menetluse lisamine ebaõnnestus. Kontrollige isikukoodi.")
+          else window.alert(response.message);
         });
     }
   }

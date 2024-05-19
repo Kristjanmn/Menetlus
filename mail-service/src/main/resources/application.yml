@@ -1,0 +1,27 @@
+application:
+  mail:
+    disabled: true
+    host: ""
+    port: 587
+    username: ""
+    password: ""
+    properties: {
+      "mail.transport.protocol": "smtp",
+      "mail.smtp.auth": "true",
+      "mail.smtp.starttls.enable": "true",
+      "mail.debug": "true"
+    }
+    signature: "\n\nmy email signature"
+    defaultSubject: "Menetluse teavitus"
+    defaultText: "Teie vastu on alustatud menetlust."
+  rabbitmq:
+    durable: true
+    queueName: menetlus.mail
+    exchangeName: menetlus-mail-exchange
+    routingKey: menetlus.mail.response
+
+spring:
+  application:
+    name: mail-service
+  rabbitmq:
+    host: rabbitmq

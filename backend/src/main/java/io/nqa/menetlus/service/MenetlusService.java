@@ -54,7 +54,7 @@ public class MenetlusService implements IMenetlusService {
     public CustomResponse getByIdDto(long id) {
         Menetlus menetlus = this.getById(id);
         if (menetlus == null)
-            return new CustomResponse(false, null);
+            return new CustomResponse(false, "Menetlust ei leitud");
         return new CustomResponse(true, modelMapper.map(menetlus, MenetlusDTO.class));
     }
 
@@ -72,9 +72,15 @@ public class MenetlusService implements IMenetlusService {
     @Override
     public CustomResponse save(MenetlusDTO dto) {
         Menetlus menetlus = modelMapper.map(dto, Menetlus.class);
+        if (!this.validateInfo(menetlus)) {
+            if (!MenetlusUtils.isEmailValid(menetlus.getEmail()))
+                return new CustomResponse(false, "Vigane e-kirja aadress");
+            if (!MenetlusUtils.isPersonalCodeValid(menetlus.getPersonalCode()))
+                return new CustomResponse(false, "Vigane isikukood");
+        }
         menetlus = this.save(menetlus);
         if (menetlus == null)
-            return new CustomResponse(false, null);
+            return new CustomResponse(false, "Salvestamine ebaõnnestus");
         return new CustomResponse(true, modelMapper.map(menetlus, MenetlusDTO.class));
     }
 

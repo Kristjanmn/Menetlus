@@ -50,6 +50,13 @@ services:
       - menetlus
     depends_on:
       - postgres
+  mail-service:
+    container_name: mail-service
+    build:
+      context: ./mail-service
+    restart: always
+    networks:
+      - menetlus
   frontend:
     container_name: frontend
     build:

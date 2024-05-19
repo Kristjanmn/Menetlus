@@ -13,7 +13,7 @@ public interface IMenetlusService {
     CustomResponse getByIdDto(final long id);
     Menetlus save(final Menetlus menetlus);
     CustomResponse save(final MenetlusDTO menetlus);
-    void sendEmail(final String email);
+    void sendEmail(final Menetlus menetlus);
     boolean validateInfo(Menetlus menetlus);
     Menetlus setEmailDelivered(long id, boolean value);
 }

@@ -1,12 +1,19 @@
 package io.nqa.menetlus.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.nqa.menetlus.configuration.ApplicationProperties;
 import io.nqa.menetlus.entity.Menetlus;
 import io.nqa.menetlus.model.CustomResponse;
 import io.nqa.menetlus.model.MenetlusDTO;
+import io.nqa.menetlus.model.MqEmailPayload;
 import io.nqa.menetlus.repository.MenetlusRepository;
 import io.nqa.menetlus.util.MenetlusUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,9 +23,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MenetlusService implements IMenetlusService {
-    private final IRabbitMqService rabbitMqService;
     private final MenetlusRepository repository;
+    private final ApplicationProperties properties;
+    private final RabbitTemplate template;
     private final ModelMapper modelMapper = new ModelMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public List<Menetlus> getAll() {
@@ -51,11 +60,13 @@ public class MenetlusService implements IMenetlusService {
 
     @Override
     public Menetlus save(Menetlus menetlus) {
-        if (!this.validateInfo(menetlus))
+        if (!this.validateInfo(menetlus)) {
             return null;
+        }
+        menetlus = this.repository.save(menetlus);
         if (!menetlus.isEmailDelivered())
-            this.sendEmail(menetlus.getEmail());
-        return this.repository.save(menetlus);
+            this.sendEmail(menetlus);
+        return menetlus;
     }
 
     @Override
@@ -68,8 +79,17 @@ public class MenetlusService implements IMenetlusService {
     }
 
     @Override
-    public void sendEmail(String email) {
-        this.rabbitMqService.sendViaDirectExchange(email);
+    public void sendEmail(Menetlus menetlus) {
+        if (menetlus.isEmailDelivered()) return;
+        try {
+            MqEmailPayload payload = new MqEmailPayload(menetlus.getId(), menetlus.getEmail(), menetlus.isEmailDelivered());
+            String json = objectMapper.writeValueAsString(payload);
+            Message message = MessageBuilder.withBody(json.getBytes()).build();
+            template.convertAndSend(properties.getRabbitMq().getExchangeName(), properties.getRabbitMq().getRoutingKey(), message);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -84,6 +104,7 @@ public class MenetlusService implements IMenetlusService {
             Menetlus menetlus = optMenetlus.get();
             menetlus.setEmailDelivered(value);
             return this.save(menetlus);
-        } return null;
+        }
+        return null;
     }
 }

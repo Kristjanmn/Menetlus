@@ -1,9 +1,17 @@
 package io.nqa.menetlus.configuration;
 
+import io.nqa.menetlus.rabbitMQ.Receiver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -12,46 +20,46 @@ public class RabbitMqConfig {
 
     @Bean
     Queue queue() {
-        return new Queue(properties.getRabbitMq().getQueueName(), properties.getRabbitMq().isDurable());
+        return new Queue(properties.getRabbitMq().getQueueName(),
+                properties.getRabbitMq().isDurable());
     }
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange(properties.getRabbitMq().getTopicExchangeName());
-    }
-
-    @Bean
-    HeadersExchange headers() {
-        return new HeadersExchange(properties.getRabbitMq().getHeaderExchangeName());
-    }
-
-    @Bean
-    DirectExchange directExchange() {
-        return new DirectExchange(properties.getRabbitMq().getDirectExchangeName());
-    }
-
-    @Bean
-    FanoutExchange fanoutExchange() {
-        return new FanoutExchange(properties.getRabbitMq().getFanoutExchangeName());
+        return new TopicExchange(properties.getRabbitMq().getExchangeName());
     }
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(properties.getRabbitMq().getRoutingKey());
+        return BindingBuilder.bind(queue).to(exchange)
+                .with(properties.getRabbitMq().getRoutingKey());
     }
 
     @Bean
-    Binding bindingHeader(Queue queue, HeadersExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).where(properties.getRabbitMq().getHeaderArgument()).exists();
+    SimpleMessageListenerContainer container(ConnectionFactory factory, MessageListenerAdapter adapter) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(factory);
+        container.setQueueNames(properties.getRabbitMq().getQueueName());
+        container.setMessageListener(adapter);
+        return container;
     }
 
     @Bean
-    Binding directExchangeBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(properties.getRabbitMq().getDirectRoutingKey());
+    MessageListenerAdapter adapter(Receiver receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessage");
     }
 
     @Bean
-    Binding bindingFanout(Queue queue, FanoutExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange);
+    public SimpleMessageConverter converter() {
+        SimpleMessageConverter converter = new SimpleMessageConverter();
+        converter.setAllowedListPatterns(List.of("io.nqa.*", "java.util.*"));
+        return converter;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory factory) {
+        RabbitTemplate template = new RabbitTemplate(factory);
+        template.setMessageConverter(converter());
+        return template;
     }
 }

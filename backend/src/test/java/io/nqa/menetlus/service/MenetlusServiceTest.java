@@ -1,6 +1,7 @@
 package io.nqa.menetlus.service;
 
 import io.nqa.menetlus.entity.Menetlus;
+import io.nqa.menetlus.model.CustomResponse;
 import io.nqa.menetlus.model.MenetlusDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,26 @@ public class MenetlusServiceTest {
     }
 
     @Test
+    void saveMenetlusTest_failure_email() {
+        Menetlus menetlus = Menetlus.builder()
+                .name("Kristjan Männimets")
+                .personalCode(39312034227L)
+                .email("kristjan@mannimets@gmail")
+                .reason("Omab liiga palju kasse").build();
+        assertNull(menetlusService.save(menetlus));
+    }
+
+    @Test
+    void saveMenetlusTest_failure_code() {
+        Menetlus menetlus = Menetlus.builder()
+                .name("Kristjan Männimets")
+                .personalCode(39312034229L)
+                .email("kristjan.mannimets@gmail.com")
+                .reason("Omab liiga palju kasse").build();
+        assertNull(menetlusService.save(menetlus));
+    }
+
+    @Test
     void saveMenetlusTest_DTO_success() {
         MenetlusDTO dto = MenetlusDTO.builder()
                 .name("Kadri Karu")
@@ -34,8 +55,33 @@ public class MenetlusServiceTest {
                 .reason("Ei meeldi kassid").build();
         MenetlusDTO expectedDto = dto;
         expectedDto.setId(1);
-        MenetlusDTO actualDto = (MenetlusDTO) menetlusService.save(dto).getData();
-        assertEquals(expectedDto, actualDto);
+        CustomResponse expecterResponse = new CustomResponse(true, expectedDto);
+        CustomResponse actualResponse = menetlusService.save(dto);
+        assertEquals(expecterResponse, actualResponse);
+    }
+
+    @Test
+    void saveMenetlusTest_DTO_failure_email() {
+        MenetlusDTO dto = MenetlusDTO.builder()
+                .name("Kadri Karu")
+                .personalCode(47701256547L)
+                .email("kadri@karu")
+                .reason("Ei meeldi kassid").build();
+        CustomResponse expectedResponse = new CustomResponse(false, "Vigane e-kirja aadress");
+        CustomResponse actualResponse = menetlusService.save(dto);
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    void saveMenetlusTest_DTO_failure_code() {
+        MenetlusDTO dto = MenetlusDTO.builder()
+                .name("Kadri Karu")
+                .personalCode(47701256458L)
+                .email("kadri@ka.ru")
+                .reason("Ei meeldi kassid").build();
+        CustomResponse expectedResponse = new CustomResponse(false, "Vigane isikukood");
+        CustomResponse actualResponse = menetlusService.save(dto);
+        assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
@@ -63,7 +109,7 @@ public class MenetlusServiceTest {
     }
 
     @Test
-    void setEmailDeliveredTest() {
+    void setEmailDeliveredTest_success() {
         Menetlus menetlus = Menetlus.builder()
                 .name("Madis Maalt")
                 .personalCode(39312034227L)
@@ -73,5 +119,17 @@ public class MenetlusServiceTest {
         menetlus = menetlusService.save(menetlus);
         menetlus = menetlusService.setEmailDelivered(menetlus.getId(), false);
         assertFalse(menetlus.isEmailDelivered());
+    }
+
+    @Test
+    void setEmailDeliveredTest_failure() {
+        Menetlus menetlus = Menetlus.builder()
+                .name("Madis Maalt")
+                .personalCode(39312034227L)
+                .email("madis@maa.lt")
+                .emailDelivered(true)
+                .reason("Maakas").build();
+        menetlus = menetlusService.setEmailDelivered(menetlus.getId(), false);
+        assertNull(menetlus);
     }
 }

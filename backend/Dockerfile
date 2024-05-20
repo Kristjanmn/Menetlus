@@ -7,6 +7,7 @@ COPY src src
 COPY build.gradle .
 COPY settings.gradle .
 
+RUN chmod +x gradlew
 RUN microdnf install findutils
 
 ENTRYPOINT ["./gradlew","bootRun"]
